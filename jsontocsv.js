@@ -16,15 +16,16 @@ const fetchdata = async () => {
 };
 
 const parsedata = (html) => {
-  const $ = cheerio.load(html);
+const $ = cheerio.load(html);
   const newsItems = [];
- 
-  $('table tr.athing').each((index, element) => {
-        const rank = $(element).find('span.rank').text();
-        const title = $(element).find('a').text();
 
-        const comments = parseInt($(element).next().find('span.score').text().trim(), 10) || 0;
-    newsItems.push({title,rank,comments});
+  $('tr.athing').each((index, element) => {
+    const title = $(element).find('.title a').text().trim();
+    const url = $(element).find('.title a').attr('href');
+    const points = parseInt($(element).next().find('.score').text().trim(), 10) || 0;
+    const comments = parseInt($(element).next().find('a:contains("comments")').text().trim().split(' ')[0], 10) || 0;
+
+    newsItems.push({ title, url, points, comments });
   });
 
   return newsItems;
